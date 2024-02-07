@@ -4,32 +4,27 @@
 #include <printf.h>
 
 int val;
+int inserisci=0;
+long tempoPassato=millis();
 
 #define CE_PIN 7
 #define CSN_PIN 8
 // instantiate an object for the nRF24L01 transceiver
 RF24 radio(CE_PIN, CSN_PIN);
 
-uint8_t address[][6] = { "1Node", "2Node" };
+uint8_t address[6] = {"1Node"};
 
-float messaggio[4];
+float messaggio[4]={0, 0, 0, 0};
 
 void setup() {
   Serial.begin(115200);
-
   pinMode(9, OUTPUT);
 
   if (!radio.begin()) {
-    Serial.println(F("radio hardware is not responding!!"));
-    while (true) {}  // hold in infinite loop
-  }else{
-    Serial.println("pronto");
+    while (true) {Serial.println(F("radio hardware is not responding!!"));}  // hold in infinite loop
   }
-  radio.setPALevel(RF24_PA_MAX);
 
-  radio.setPayloadSize(sizeof(messaggio));
-
-  radio.openWritingPipe(address[1]);
+  radio.setPALevel(RF24_PA_LOW);
 
   radio.openReadingPipe(1, address[0]);
 
@@ -38,12 +33,10 @@ void setup() {
 
 void loop() {
   uint8_t pipe;
-  if (radio.available(&pipe)) {              // is there a payload? get the pipe number that recieved it
+  if (radio.available(&pipe)) {          // is there a payload? get the pipe number that recieved it
     uint8_t bytes = radio.getPayloadSize();  // get the size of the payload
-    radio.read(&messaggio, bytes);
-    val = messaggio[0];// fetch payload from FIFO
-    val = map(val, 0, 1023, 124, 250);
-    Serial.println(val);   /*          
+    radio.read(messaggio, sizeof(messaggio));
+    /*          
     Serial.print(F("Received "));
     Serial.print(bytes);  // print the size of the payload
     Serial.print(F(" bytes on pipe "));
@@ -54,6 +47,15 @@ void loop() {
     }*/
     Serial.println(messaggio[0]);
   }
-  
-  analogWrite(9, val);
+  if(inserisci <= val){
+    if(millis()-tempoPassato>10){
+      tempoPassato=millis(); 
+      inserisci++;
+    }
+  }else if(inserisci >= val){
+    inserisci--;
+  }
+  val = messaggio[0];
+  val = map(val, 0, 1023, 124, 250);
+  analogWrite(9, inserisci);
 }

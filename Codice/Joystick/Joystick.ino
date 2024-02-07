@@ -14,7 +14,7 @@
 RF24 radio(CE_PIN, CSN_PIN);
 
 
-uint8_t address[][6] = {"1Node","2Node"};
+uint8_t address[6] = {"1Node"};
 
 float messaggio[4];
 
@@ -27,13 +27,9 @@ void setup() {
     while (true) {}  // hold in infinite loop
   }
 
-  radio.setPALevel(RF24_PA_MAX);
-  
-  radio.setPayloadSize(sizeof(messaggio));
+  radio.setPALevel(RF24_PA_LOW);
 
   radio.openWritingPipe(address[0]);
-
-  radio.openReadingPipe(1, address[1]);
 
   radio.stopListening();
 

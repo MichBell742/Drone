@@ -4,7 +4,7 @@
 
 /*
 //avendo un'alimentazione esterna
-//ricordarsi di creare un separatore di tensione con due resistenze messe insieme in modo
+//ricordarsi di creare un separatore di tensione con due resistenze messe in serie in modo
 //tale che la tensione immessa in arduino non superino i 5 volt
 float tMax=9000;//voltaggio massimo della batteria
 float tAttuale=0.0;//voltaggio della batteria attuale

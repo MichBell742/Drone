@@ -56,6 +56,6 @@ void loop() {
     inserisci--;
   }
   val = messaggio[0];
-  val = map(val, 0, 1023, 124, 250);
+  //val = map(val, 0, 1023, 124, 250);
   analogWrite(9, inserisci);
 }

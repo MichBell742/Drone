@@ -17,6 +17,8 @@ RF24 radio(CE_PIN, CSN_PIN);
 uint8_t address[6] = {"1Node"};
 
 float messaggio[4];
+int convertito=0;
+
 
 void setup() {
   Serial.begin(115200);
@@ -38,10 +40,10 @@ void setup() {
 
 void loop() {
   
-  messaggio[0]=analogRead(pinAnalogicoUnoAsseX);
+  messaggio[0]=converti(analogRead(pinAnalogicoUnoAsseX));
   messaggio[1]=analogRead(pinAnalogicoUnoAsseY);
-  messaggio[2]=analogRead(pinAnalogicoDueAsseX);
-  messaggio[3]=analogRead(pinAnalogicoDueAsseY);
+  messaggio[2]=converti(analogRead(pinAnalogicoDueAsseX));
+  messaggio[3]=converti(analogRead(pinAnalogicoDueAsseY));
 
   for(int i=0; i< 4; i++){
     Serial.println(messaggio[i]);
@@ -52,7 +54,11 @@ void loop() {
   if(report){
     Serial.println("------Trasmissione riuscita");
   }else {
-    Serial.println("!!!!!!!!!!!!!!!!!!!Trasmissione non riuscita");
+    Serial.println("!!!!!!Trasmissione non riuscita");
   }
   delay(50);
+}
+int converti(int analogico){
+  convertito=map(analogico, 0, 1023, 124, 250);
+  return convertito;
 }

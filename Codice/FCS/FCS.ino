@@ -62,8 +62,7 @@ void loop() {
     inserisci--;
   }
   val = messaggio[0];
-  val = map(val, 0, 1023, 124, 250);
-  scriviIn(9, inserisci);
-  scriviIn(10, inserisci);
+  analogWrite(9, inserisci);
+  analogWrite(10, inserisci);
   Serial.println(inserisci);
 }

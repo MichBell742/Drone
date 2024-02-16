@@ -1,3 +1,7 @@
+#include <Wire.h>
+
+#include <MPU6050_tockn.h>
+
 #include <RF24.h>
 #include <RF24_config.h>
 #include <nRF24L01.h>
@@ -21,6 +25,8 @@ RF24 radio(CE_PIN, CSN_PIN);
 
 uint8_t address[6] = { "1Node" };  //frequenza di comunicazione
 
+MPU6050 mpu6050(Wire);
+
 int messaggio[4] = {0, 0, 0, 0};  //Attenzione è stato modificato in int - valori da 0 a 1023 che vengono inviati dal Joystick
 
 void setup() {
@@ -30,6 +36,8 @@ void setup() {
   pinMode(pinMotore2, OUTPUT);
   pinMode(pinMotore3, OUTPUT);
   pinMode(pinMotore4, OUTPUT);
+
+  //comunicazione wirless
 
   if (!radio.begin()) {
     while (true) { Serial.println(F("radio hardware is not responding!!")); }  // hold in infinite loop
@@ -41,7 +49,15 @@ void setup() {
 
   radio.startListening();
 
-  start(185); //attiva le eliche del drone
+  //Inizializiamo il giroscopio
+  
+  Wire.begin();
+  mpu6050.begin();
+  mpu6050.calcGyroOffsets(true); //impiega più o meno 4sec
+
+  //attiva le eliche del drone
+
+  start(185); 
 }
 
 void start(int motori) {
@@ -71,9 +87,9 @@ void loop() {
   }
   //messaggio[1] corrisponde alla Y del primo joystick
   if(messaggio[1]<505){ //diamo uno spazio di 7 cosicche da evitare problemi
-    rotazioneAsseX();
+    rotazioneAsseX("antiorario");
   }else if(messaggio[1]<519){
-    rotazioneAsseX();
+    rotazioneAsseX("orario");
   }
 }
 
@@ -85,5 +101,9 @@ void movimentiAsseZ(int motore1, int motore2, int motore3, int motore4) {
 }
 
 void rotazioneAsseX(String verso){
-  //codice per ruotare il drone
+  if(verso.equals("antiorario")){
+
+  }else{
+
+  }
 }
